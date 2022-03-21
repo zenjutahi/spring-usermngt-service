@@ -5,7 +5,9 @@ import com.springboot.userservice.usermanagementservice.entities.User;
 import com.springboot.userservice.usermanagementservice.exceptions.UserNotFoundException;
 import com.springboot.userservice.usermanagementservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +43,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(id);
 
         if(!optionalUser.isPresent()){
-            throw new UserNotFoundException("User Not Found in user Repository, send correct user Id");
+            throw new UserNotFoundException("User Not Found in user Repository, provide correct user Id");
         }
         user.setId(id);
         return userRepository.save(user);
@@ -53,9 +55,12 @@ public class UserService {
 
     // deleteUserById
     public void deleteUserById(Long id){
-        if(userRepository.findById(id).isPresent()){
-            userRepository.deleteById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(!optionalUser.isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "provide correct user Id");
         }
+        userRepository.deleteById(id);
     }
 
 }
