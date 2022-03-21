@@ -35,6 +35,12 @@ public class UserController {
     public  User updateUserById(@PathVariable("id") Long id, @RequestBody User user){
         return userService.updateUserById(id, user);
     }
+    // Get user by Username
+    @GetMapping("/users/byusername/{username}")
+    public User getUserByUserName(@PathVariable("username") String username){
+        return userService.getUserByUserName(username);
+    }
+
     // deleteUserById
     @DeleteMapping("/users/{id}")
     public void deleteUserById(@PathVariable("id") Long id){
