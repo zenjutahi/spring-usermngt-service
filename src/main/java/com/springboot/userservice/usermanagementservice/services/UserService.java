@@ -2,6 +2,7 @@ package com.springboot.userservice.usermanagementservice.services;
 
 
 import com.springboot.userservice.usermanagementservice.entities.User;
+import com.springboot.userservice.usermanagementservice.exceptions.UserExistsException;
 import com.springboot.userservice.usermanagementservice.exceptions.UserNotFoundException;
 import com.springboot.userservice.usermanagementservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,13 @@ public class UserService {
     }
 
     // Create user method
-    public User createUser(User user){
+    public User createUser(User user) throws UserExistsException{
+        // check if user exist using username
+        User existingUser = userRepository.findByUserName(user.getUserName());
+        // throw true throw UserExistsException
+        if(existingUser !=null) {
+            throw new UserExistsException("Use another username to create User");
+        }
         return userRepository.save(user);
     }
 

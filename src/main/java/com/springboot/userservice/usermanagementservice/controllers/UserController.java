@@ -2,6 +2,7 @@ package com.springboot.userservice.usermanagementservice.controllers;
 
 
 import com.springboot.userservice.usermanagementservice.entities.User;
+import com.springboot.userservice.usermanagementservice.exceptions.UserExistsException;
 import com.springboot.userservice.usermanagementservice.exceptions.UserNotFoundException;
 import com.springboot.userservice.usermanagementservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,11 @@ public class UserController {
 
     @PostMapping("/users")
     public User createUser(@RequestBody User user){
-        return userService.createUser(user);
+        try {
+            return userService.createUser(user);
+        } catch (UserExistsException ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
     }
 
     @GetMapping("/users/{id}")
