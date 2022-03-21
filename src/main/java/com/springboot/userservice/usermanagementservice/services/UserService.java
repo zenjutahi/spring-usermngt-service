@@ -2,6 +2,7 @@ package com.springboot.userservice.usermanagementservice.services;
 
 
 import com.springboot.userservice.usermanagementservice.entities.User;
+import com.springboot.userservice.usermanagementservice.exceptions.UserNotFoundException;
 import com.springboot.userservice.usermanagementservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,12 @@ public class UserService {
     }
 
     // Get userById method
-    public Optional<User> getUserById(Long id){
+    public Optional<User> getUserById(Long id) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
+
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User Not Found in user Repository");
+        }
         return user;
     }
 
