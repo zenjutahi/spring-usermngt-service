@@ -7,6 +7,7 @@ import com.springboot.userservice.usermanagementservice.exceptions.UserNotFoundE
 import com.springboot.userservice.usermanagementservice.repositories.UserRepository;
 import com.springboot.userservice.usermanagementservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,12 +30,14 @@ public class OrderHateoasController {
 
     // GET all orders for a user
     @GetMapping("/{user_id}/orders")
-    public List<Order> getAllOrders(@PathVariable Long user_id) throws UserNotFoundException {
+    public CollectionModel<Order> getAllOrders(@PathVariable Long user_id) throws UserNotFoundException {
 
         Optional<User> userOptional = userRepository.findById(user_id);
         if(!userOptional.isPresent()){
             throw new UserNotFoundException("User Not Found");
         }
-        return userOptional.get().getOrders();
+        List<Order> allOrders = userOptional.get().getOrders();
+        CollectionModel<Order> finalOrders = CollectionModel.of(allOrders);
+        return finalOrders;
     }
 }

@@ -5,8 +5,8 @@ import com.springboot.userservice.usermanagementservice.exceptions.UserNotFoundE
 import com.springboot.userservice.usermanagementservice.repositories.UserRepository;
 import com.springboot.userservice.usermanagementservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -60,7 +60,23 @@ public class UserHateoasController {
     }
     // Get all users
     @GetMapping
-    public List<User> getAllUser(){
-        return userService.getAllUser();
+    public CollectionModel<User> getAllUser() throws UserNotFoundException {
+        List<User> allUsers = userService.getAllUser();
+
+        for (User user : allUsers) {
+            //self link to each user
+            WebMvcLinkBuilder selfLink = linkTo(methodOn(this.getClass()).getUserById(user.getId()));
+            user.add(selfLink.withRel("self-link"));
+            // relationship-links-with-getAllOrders
+            WebMvcLinkBuilder orderLinks = linkTo(methodOn(OrderHateoasController.class).getAllOrders(user.getId()));
+            user.add(orderLinks.withRel("order-links"));
+            // self link to All Users
+            WebMvcLinkBuilder lintToUsers = linkTo(methodOn(this.getClass()).getAllUser());
+            user.add(lintToUsers.withRel("users-links"));
+
+        }
+        CollectionModel<User> finalEntity = CollectionModel.of(allUsers);
+
+        return finalEntity;
     }
 }
