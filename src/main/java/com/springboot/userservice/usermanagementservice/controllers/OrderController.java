@@ -6,6 +6,7 @@ import com.springboot.userservice.usermanagementservice.exceptions.UserNotFoundE
 import com.springboot.userservice.usermanagementservice.repositories.OrderRepository;
 import com.springboot.userservice.usermanagementservice.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,21 @@ public class OrderController {
         }
         User user = userOptional.get();
         order.setUser(user);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(builder.path("/user/{user_id}").buildAndExpand(user.getId()).toUri());
         return orderRepository.save(order);
     }
+
+    // Get order by id /{user_id}/orders/{order_id}
+    @GetMapping("/{user_id}/orders/{order_id}")
+    public Order getOrderByOrderId(@PathVariable("user_id") Long user_id, @PathVariable("order_id") Long order_id) throws UserNotFoundException {
+        Optional<User> userOptional = userRepository.findById(user_id);
+
+        if(!userOptional.isPresent()){
+            throw new UserNotFoundException("User Not Found");
+        }
+        Order order = orderRepository.findById(order_id).get();
+        return order;
+    }
+
 }
