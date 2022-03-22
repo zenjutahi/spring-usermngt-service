@@ -1,6 +1,8 @@
 package com.springboot.userservice.usermanagementservice.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 // Entity maps to the row in the database
 // @Table defines the table name
@@ -13,9 +15,11 @@ public class User {
     private Long id;
 
     //set name , length and unique for column using @Column
+    @NotEmpty(message = "Username is Mandatory field. Please provide username")
     @Column(name="USER_NAME", length = 50, nullable = false,unique = true)
     private String userName;
 
+    @Size(min=2, message="FirstName should have atleast 2 characters")
     @Column(name="FIRST_NAME", length = 50, nullable = false)
     private String firstName;
 
