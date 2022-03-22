@@ -7,6 +7,7 @@ import com.springboot.userservice.usermanagementservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -71,11 +72,10 @@ public class UserHateoasController {
             WebMvcLinkBuilder orderLinks = linkTo(methodOn(OrderHateoasController.class).getAllOrders(user.getId()));
             user.add(orderLinks.withRel("order-links"));
             // self link to All Users
-            WebMvcLinkBuilder lintToUsers = linkTo(methodOn(this.getClass()).getAllUser());
-            user.add(lintToUsers.withRel("users-links"));
 
         }
-        CollectionModel<User> finalEntity = CollectionModel.of(allUsers);
+        Link link = linkTo(methodOn(this.getClass()).getAllUser()).withSelfRel();
+        CollectionModel<User> finalEntity = CollectionModel.of(allUsers, link);
 
         return finalEntity;
     }
