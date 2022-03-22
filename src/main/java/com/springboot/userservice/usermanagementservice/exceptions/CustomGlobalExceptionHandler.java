@@ -1,5 +1,6 @@
 package com.springboot.userservice.usermanagementservice.exceptions;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -49,4 +50,21 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
         return new ResponseEntity<Object>(customErrorInfo, HttpStatus.NOT_FOUND);
     }
+
+    // ConstraintViolationException
+    @ExceptionHandler(ConstraintViolationException.class)
+    public final ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
+                                                                           WebRequest request){
+
+        CustomErrorInfo customErrorInfo = new CustomErrorInfo(new Date(), ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<Object>(customErrorInfo, HttpStatus.BAD_REQUEST);
+    }
+
+
+
+
+
+
 }
