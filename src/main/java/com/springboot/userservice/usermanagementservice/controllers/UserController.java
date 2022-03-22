@@ -3,6 +3,7 @@ package com.springboot.userservice.usermanagementservice.controllers;
 
 import com.springboot.userservice.usermanagementservice.entities.User;
 import com.springboot.userservice.usermanagementservice.exceptions.UserExistsException;
+import com.springboot.userservice.usermanagementservice.exceptions.UserNameNotFoundException;
 import com.springboot.userservice.usermanagementservice.exceptions.UserNotFoundException;
 import com.springboot.userservice.usermanagementservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +62,12 @@ public class UserController {
     }
     // Get user by Username
     @GetMapping("/users/byusername/{username}")
-    public User getUserByUserName(@PathVariable("username") String username){
-        return userService.getUserByUserName(username);
+    public User getUserByUserName(@PathVariable("username") String username) throws UserNameNotFoundException {
+        User user = userService.getUserByUserName(username);
+        if (user == null){
+            throw new UserNameNotFoundException("Username: '" + username + "' not found in repository");
+        }
+        return user;
     }
 
     // deleteUserById
