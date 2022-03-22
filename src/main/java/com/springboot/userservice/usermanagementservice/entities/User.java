@@ -3,6 +3,7 @@ package com.springboot.userservice.usermanagementservice.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 // Entity maps to the row in the database
 // @Table defines the table name
@@ -34,6 +35,9 @@ public class User {
 
     @Column(name="SSN", length = 50, nullable = false, unique = true)
     private String ssn;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 
     // No Argument constructor
     public User() {
@@ -81,6 +85,10 @@ public class User {
         this.ssn = ssn;
     }
 
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     public Long getId() {
         return id;
     }
@@ -107,6 +115,10 @@ public class User {
 
     public String getSsn() {
         return ssn;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 
     // To string
