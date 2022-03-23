@@ -1,6 +1,7 @@
 package com.springboot.userservice.usermanagementservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
@@ -12,7 +13,10 @@ public class Order extends RepresentationModel<Order> {
 
     @Id
     @GeneratedValue
+    @JsonView(Views.Internal.class)
     private Long id;
+
+    @JsonView(Views.Internal.class)
     private String orderDescription;
 
     @ManyToOne(fetch = FetchType.LAZY)
