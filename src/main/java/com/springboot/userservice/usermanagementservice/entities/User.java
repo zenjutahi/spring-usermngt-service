@@ -1,5 +1,7 @@
 package com.springboot.userservice.usermanagementservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import java.util.List;
 
 // Entity maps to the row in the database
 // @Table defines the table name
+@JsonIgnoreProperties({"role", "email"} )
 @Entity
 @Table(name = "user")
 public class User extends RepresentationModel<User> {
@@ -35,6 +38,7 @@ public class User extends RepresentationModel<User> {
     @Column(name="ROLE", length = 50, nullable = false)
     private String role;
 
+    @JsonIgnore
     @Column(name="SSN", length = 50, nullable = false, unique = true)
     private String ssn;
 

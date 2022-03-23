@@ -8,6 +8,7 @@ import com.springboot.userservice.usermanagementservice.repositories.UserReposit
 import com.springboot.userservice.usermanagementservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/hateoas/users")
@@ -37,6 +41,7 @@ public class OrderHateoasController {
             throw new UserNotFoundException("User Not Found");
         }
         List<Order> allOrders = userOptional.get().getOrders();
+//        Link linkToUser = linkTo(methodOn(UserController.class).getUserById(user_id)).withRel("user-link");
         CollectionModel<Order> finalOrders = CollectionModel.of(allOrders);
         return finalOrders;
     }
